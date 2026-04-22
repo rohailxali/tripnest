@@ -3,7 +3,7 @@
  * All animation components live here so pages stay clean.
  */
 import React from 'react';
-import { motion, AnimatePresence, Variants, MotionProps } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 
 // ─── Shared Variants ──────────────────────────────────────────────────────────
 export const fadeUp: Variants = {

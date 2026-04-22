@@ -218,6 +218,7 @@ const BudgetTab: React.FC<{ trip: Trip }> = ({ trip }) => {
 };
 
 // ─── Map Tab ──────────────────────────────────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MapTab: React.FC<{ trip: Trip }> = ({ trip }) => (
   <div className="space-y-4">
     {/* Map Placeholder */}

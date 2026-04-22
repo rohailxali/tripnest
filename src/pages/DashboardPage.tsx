@@ -12,7 +12,7 @@ import { tripService } from '../services/api';
 import { mockStats } from '../data/mockData';
 import { EmptyState, Badge } from '../components/ui';
 import {
-  StaggerContainer, StaggerItem, SlideUp, AnimatedCard
+  StaggerContainer, StaggerItem, SlideUp
 } from '../components/ui/motion';
 import { format } from 'date-fns';
 

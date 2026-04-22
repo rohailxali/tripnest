@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Sparkles, Map, DollarSign, Users, Share2, Shield,
   ChevronRight, Globe, Zap, ArrowRight
 } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { popularDestinations } from '../data/mockData';
 import { StaggerContainer, StaggerItem, FloatingOrb } from '../components/ui/motion';
 
