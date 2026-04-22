@@ -1,0 +1,98 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TripNest Full-Stack Docker Compose
+#
+# Services:
+#   frontend  – React app served via nginx on port 3000
+#   api       – Placeholder for your backend (FastAPI / Express / Django)
+#   db        – PostgreSQL database
+#   redis     – Cache / session store
+#
+# Usage:
+#   docker compose up --build          # start everything
+#   docker compose up frontend         # frontend only (mock data)
+#   docker compose logs -f api         # tail backend logs
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Frontend ──────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: http://localhost:8000
+        REACT_APP_MAPS_KEY: ${REACT_APP_MAPS_KEY:-}
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - tripnest
+
+  # ── Backend API ───────────────────────────────────────────────────────────
+  # Replace this placeholder with your real backend image / build
+  api:
+    image: node:20-alpine          # swap with your backend image
+    working_dir: /app
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    command: sh -c "echo 'Replace with real backend' && sleep infinity"
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://tripnest:secret@db:5432/tripnest
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      NODE_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - tripnest
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: tripnest
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: tripnest
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tripnest"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - tripnest
+
+  # ── Redis ─────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - tripnest
+
+volumes:
+  pgdata:
+
+networks:
+  tripnest:
+    driver: bridge
